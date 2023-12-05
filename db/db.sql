@@ -3,16 +3,29 @@ create database quarkus_social;
 use quarkus_social;
 
 create table User (
-id int auto_increment primary key not null,
+id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 name varchar(100) not null,
-idade integer not null
+age integer not null
 );
 
 create table Posts (
-id int auto_increment primary key not null,
+id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 post_text varchar(150) not null,
-data_post datetime default now(),
-user_id int not null,
+date_time datetime not null,
+user_id BIGINT NOT NULL,
 
 FOREIGN KEY (user_id) REFERENCES User(id)
 )
+
+
+
+create table Followers (
+id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+
+user_id BIGINT NOT NULL,
+follower_id BIGINT NOT NULL,
+FOREIGN KEY (user_id) REFERENCES User(id)
+FOREIGN KEY (follower_id) REFERENCES User(id)
+
+)
+

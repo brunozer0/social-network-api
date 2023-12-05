@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "User")
 @Data
 public class User {
 
