@@ -3,6 +3,7 @@ package br.com.application.quarkussocial.rest;
 
 import br.com.application.quarkussocial.domain.model.Post;
 import br.com.application.quarkussocial.domain.model.User;
+import br.com.application.quarkussocial.domain.repository.FollowerRepository;
 import br.com.application.quarkussocial.domain.repository.PostRepository;
 import br.com.application.quarkussocial.domain.repository.UserRepository;
 import br.com.application.quarkussocial.rest.dto.CreatePostRequest;
@@ -26,13 +27,16 @@ public class PostResource {
 
     private UserRepository userRepository;
     private PostRepository repository;
+    private FollowerRepository followerRepository;
 
     @Inject
     public PostResource (
-            UserRepository userRepository, PostRepository repository){
-    this.userRepository = userRepository;
-
+            UserRepository userRepository,
+            PostRepository repository,
+            FollowerRepository followerRepository){
+        this.userRepository = userRepository;
         this.repository = repository;
+        this.followerRepository = followerRepository;
     }
 
     @POST
@@ -51,11 +55,33 @@ public class PostResource {
     }
 
     @GET
-    public Response listPosts(@PathParam("userId") long userId){
+    public Response listPosts(@PathParam("userId") long userId,
+                              @HeaderParam("followerId") Long followerId){
 
         User user = userRepository.findById(userId);
         if(user == null ){
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if(followerId == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("follower ID does not exist")
+                    .build();
+        }
+
+        User follower = userRepository.findById(followerId);
+
+        if (follower == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("this followerId does not exist")
+                    .build();
+        }
+       boolean follows = followerRepository.follows(user, follower);
+
+        if(!follows) {
+
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("Follow to see the posts").build();
         }
 
         PanacheQuery<Post> query = repository.find(
