@@ -2,7 +2,7 @@ create database quarkus_social;
 
 use quarkus_social;
 
-create table User (
+create table Usuario (
 id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 name varchar(100) not null,
 age integer not null
