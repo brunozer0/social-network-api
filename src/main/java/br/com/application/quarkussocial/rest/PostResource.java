@@ -76,7 +76,7 @@ public class PostResource {
                     .entity("this followerId does not exist")
                     .build();
         }
-       boolean follows = followerRepository.follows(user, follower);
+       boolean follows = followerRepository.follows(follower,user);
 
         if(!follows) {
 
