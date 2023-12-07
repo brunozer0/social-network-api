@@ -55,8 +55,9 @@ public class PostResource {
     }
 
     @GET
-    public Response listPosts(@PathParam("userId") long userId,
-                              @HeaderParam("followerId") Long followerId){
+    public Response listPosts(
+            @PathParam("userId") long userId,
+            @HeaderParam("followerId") Long followerId){
 
         User user = userRepository.findById(userId);
         if(user == null ){
@@ -65,7 +66,7 @@ public class PostResource {
 
         if(followerId == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("follower ID does not exist")
+                    .entity("You forgot the header followerId")
                     .build();
         }
 
